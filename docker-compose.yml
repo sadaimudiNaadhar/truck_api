@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  app:
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    environment:
+      TYPEORM_DB_HOST: ${TYPEORM_DB_HOST}
+    networks:
+      - backend_api
+    volumes:
+      - .:/usr/src/app 
+  prod_db:
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_USER: ${TYPEORM_DB_USERNAME}
+      POSTGRES_PASSWORD: ${TYPEORM_DB_PASSWORD}
+      POSTGRES_DB: ${TYPEORM_DB_NAME}
+    ports:
+      - "${TYPEORM_DB_PORT}:${TYPEORM_DB_PORT}"  
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    restart: always  
+    networks:
+      - backend_api  
+  test_db:
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_USER: ${TYPEORM_DB_USERNAME}
+      POSTGRES_PASSWORD: ${TYPEORM_DB_PASSWORD}
+      POSTGRES_DB: ${TYPEORM_TEST_DB_NAME}
+    ports:
+      - "${TYPEORM_TEST_DB_PORT}:${TYPEORM_TEST_DB_PORT}" 
+    volumes:
+      - testdbdata:/var/lib/postgresql/data 
+    restart: always      
+    networks:
+      - backend_api  
+networks:
+  backend_api:
+volumes:
+  dbdata:
+    driver: local
+  testdbdata:
+    driver: local

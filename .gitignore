@@ -1,0 +1,18 @@
+# Logs
+logs
+*.log
+
+# Dependencies
+node_modules
+
+# Built files
+dist
+build
+src/routes/*
+# IDE files
+.vscode
+.idea
+
+# Other
+.env
+.DS_Store
